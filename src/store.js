@@ -1,4 +1,5 @@
-import {createStore} from "redux";
+import {createStore, applyMiddleware} from "redux";
+import thunk from 'redux-thunk'
 
 const initialState = {
     isLoaded: false,
@@ -22,7 +23,19 @@ const reducer = (state=initialState, action) => {
         
     }
 };
-const store = createStore(reducer)
+
+//서버와 통신
+export const getApi = () => {
+    //thunk가 가능하게 해줌.
+    return async (dispatch, getState) => {
+        const data = await fetch('https://yts.mx/api/v2/list_movies.json?limit=50');
+        const {isLoaded} = getState();
+        dispatch({type: SET_IS_LOADED, isLoaded: !isLoaded});
+        return data;
+    }
+}
+
+const store = createStore(reducer, applyMiddleware(thunk));
 
 console.log(store.getState());
 

@@ -1,7 +1,7 @@
 //src에서 코드모두 관리할 것임
 import React, {Component} from "react";
 import {View, Text, TouchableOpacity, SafeAreaView} from "react-native";
-import store, {SET_IS_LOADED, ADD, MINUS} from '../store';
+import store, {SET_IS_LOADED, ADD, MINUS, getApi} from '../store';
 import {connect} from 'react-redux';
 
 
@@ -15,8 +15,16 @@ const Home=(props) => {
             <Text>count: {count}</Text>
             <TouchableOpacity
                 style={{width: 100, height: 100, backgroundColor: 'green'}}
-                onPress={() => {
+                onPress={async() => {
+                    //store.js안에 있는거 안쓸거면 아래와 같이
+                    //const data = await fetch('https://yts.mx/api/v2/list_movies.json?limit=50');
+                    //toggleIsLoaded(true)
+                    
+
+                    //store.js에 있는거 쓸거면 아래와 같이
+                    const result = await getApi();
                     toggleIsLoaded(!isLoaded);
+
             }}>
                 <Text>hihi</Text>
             </TouchableOpacity>
@@ -60,8 +68,11 @@ const mapDispatchToProps = dispatch => {
         },
         minus: count => {
             dispatch({type: MINUS, count: count});
+        },
+        getApi: () => {
+            dispatch(getApi());
         }
-        
+    
     };
 }
 
